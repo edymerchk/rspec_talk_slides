@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Testing with RSpec</h1>
+					<p>
+						<small>by <a href="http://twitter.com/edymerchk">@edymerchk</a></small>
+					</p>
+				</section>
+
+				<section>
+					<section>
+					<h2>Overview</h2>
+					<p>
+						RSpec is testing tool for the Ruby programming language
+					</p>
+
+					</section>
+					<section>
+					<h2>Overview</h2>
+					<ul>
+						<li>a rich command line program (the rspec command)</li>
+						<li>textual descriptions of examples and groups (<a href="http://rubydoc.info/gems/rspec-core/frames">rspec-core</a>)</li>
+						<li>flexible and customizable reporting</li>
+						<li>extensible expectation language (<a href="http://rubydoc.info/gems/rspec-expectations/frames">rspec-expectations</a>)</li>
+						<li>built-in mocking/stubbing framework (<a href="http://rubydoc.info/gems/rspec-mocks/frames">rspec-mocks</a>)</li>
+					</ul>	
+				</section>
+				</section>
+
+				<section>
+					<section>
+					<h2>Installation</h2>
+					<pre><code data-trim contenteditable>
+					$ gem install rspec
+				</code></pre>
+				</section>
+				<section>
+				<h3>Initialize</h3>
+					<pre><code data-trim contenteditable>
+					$ rspec --init
+
+ create spec/spec_helper.rb
+ create .rspec
+				</code></pre>
+				</section>
+				<section>
+				<h3>.rspec</h3>
+				<p>command line options</p>
+					<pre><code data-trim contenteditable>
+--color
+--format documentation
+				</code></pre>
+				</section>
+				</section>
+				<!-- descrbie context it  -->
+				<section>
+					<section>
+						<h3>Describe / context / it</h3>
+					</section>
+					<section>
+						<h3>Describe</h3>
+						<pre><code data-trim contenteditable>
+describe Calculator do
+ describe '#add' do
+  #...
+ end
+end
+				</code></pre>
+
+				<blockquote><small><p>Be clear about what method you are describing. For instance, use the Ruby documentation convention of . (or ::) when referring to a class method's name and # when referring to an instance method's name.
+				</p>
+				</small>
+				</blockquote>
+
+					</section>
+
+					<section>
+						<h3>Context</h3>
+						<pre><code data-trim contenteditable>
+describe Order do
+  context "with no items" do
+    #...
+  end
+end
+
+context "with one item" do
+    #...
+  end
+end
+				</code></pre>
+
+				<blockquote><small><p>Contexts are a powerful method to make your tests clear and well organized. In the long term this practice will keep tests easy to read.
+				</p>
+				</small>
+				</blockquote>
+
+					</section>
+					<section>
+						<h3>it</h3>
+						<pre><code data-trim contenteditable>
+describe "something" do
+  context "in one context" do
+    it "does one thing" do
+    end
+  end
+  context "in another context" do
+    it "does another thing" do
+    end
+  end
+end
+				</code></pre>
+
+				<blockquote><small><p>A example description should never be longer than 40 characters. If this happens you should split it using a context.
+				</p>
+				</small>
+				</blockquote>
+
+					</section>
+				</section>
+
+				<section>
+					<h2>Expectations</h2>
+					<p>RSpec::Expectations lets you express expected outcomes on an object in an example.</p>
+					<pre><code data-trim contenteditable>
+expect(actual).to matcher(expected)
+expect(actual).not_to matcher(expected)
+				</code></pre>
+
+				<pre><code data-trim contenteditable>
+it 'returns the sum of its arguments' do
+  expect(Calculator.new.add(1, 2)).to eq(3)
+end
+				</code></pre>
+				</section>
+
+				<section>
+					<section>
+					<h2>Matchers</h2>
+					<img src="imgs/matchers1.png">
+					</section>
+					<section>
+					<h2>Matchers</h2>
+					<img src="imgs/matchers2.png">
+					</section>	
+					<section>
+					<h2>Examples</h2>
+					<img src="imgs/matchers3.png">
+					</section>
+				</section>
+
+
+
+				<section>
+					<section>
+					<h2>Rails Installation</h2>
+					<pre><code data-trim contenteditable>
+group :development, :test do
+  gem "rspec-rails"
+  gem "factory_girl_rails"
+end
+
+group :test do
+  gem "database_cleaner"
+  gem "faker"
+end
+
+				</code></pre>
+				</section>
+				<section>
+					<h3>run rspec generator</h3>
+				<pre><code data-trim contenteditable>
+					$ rails g rspec:install
+
+ create spec/spec_helper.rb
+ create .rspec
+				</code></pre>
+				</section>
+
+				<section>
+					<h3>config rails generator</h3>
+				<pre><code data-trim contenteditable>
+config/application.rb
+
+config.generators do |g|
+  g.test_framework :rspec,
+  fixtures: true,
+  view_specs: false,
+  helper_specs: false,
+  routing_specs: false,
+  controller_specs: true,
+  request_specs: true
+  g.fixture_replacement :factory_girl, dir: "spec/factories"
+end
+				</code></pre>
+				</section>
+
+				<section>
+				<h3>db config</h3>
+				<pre><code data-trim contenteditable>
+$ vim config/database.yml
+
+$ rake db:test:prepare
+				</code></pre>
+				</section>
+				<section>
+				<h3>additional rspec config</h3>
+				<pre><code data-trim contenteditable>
+$ vim spec/spec_helper.rb
+				</code></pre>
+				</section>
+				</section>
+
+				<!-- model specs -->
+				<section>
+					<section>
+						<h1>Model specs</h1>
+					</section>
+					<section>
+						<h3>Model specs</h3>
+						<ul>
+							<li>The default factory should generate a valid object (more on factories in just a moment)</li>
+							<li>Data that fail validations should not be valid.</li>
+							<li>Class and instance methods perform as expected.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Location location location!</h3>
+					<blockquote><small><p>The name and location for your spec file is important! <br> RSpec’s file structure
+mirrors that of the app directory, as do the files within it. In the case of model
+specs, contact_spec.rb should correspond to contact.rb. 
+				</p>
+				</small>
+				</blockquote>
+					</section>
+					<section>
+						<h3>Structure</h3>
+					<pre><code data-trim contenteditable>
+spec/models/contact_spec.rb
+
+require 'spec_helper'
+
+describe Contact do
+  it "has a valid factory"
+  it "is invalid without a firstname"
+  it "is invalid without a lastname"
+  it "returns a contact's full name as a string"
+end
+				</code></pre>
+					</section>
+				<section>
+				<h3>Factories</h3>
+	<blockquote><small><p>factory_girl is a fixtures replacement with a straightforward definition syntax, support for multiple build strategies (saved instances, unsaved instances, attribute hashes, and stubbed objects), and support for multiple factories for the same class (user, admin_user, and so on), including factory inheritance. 
+				</p>
+				</small>
+				</blockquote>
+
+					</section>
+					<section>
+<pre><code data-trim contenteditable>
+spec/factories/contacts.rb
+
+FactoryGirl.define do
+  factory :contact do
+    firstname "John"
+    lastname "Doe"
+    sequence(:email) { |n| "johndoe#{n}@example.com"}
+  end
+end
+				</code></pre>
+					</section>
+
+										<section>
+<pre><code data-trim contenteditable>
+describe Contact do
+  it "has a valid factory" do
+    FactoryGirl.create(:contact).should be_valid
+  end
+  it "is invalid without a firstname" do
+    FactoryGirl.build(:contact, firstname: nil).should_not be_valid
+  end
+  it "is invalid without a lastname" do
+    FactoryGirl.build(:contact, lastname: nil).should_not be_valid
+  end
+  it "returns a contact's full name as a string" do
+    FactoryGirl.create(:contact,
+      firstname: "John",
+      lastname: "Doe").name.should eq "John Doe"
+  end
+end
+				</code></pre>
+					</section>
+					<section>
+						<h3>Faker</h3>
+					<pre><code data-trim contenteditable>
+spec/factories/contacts.rb
+
+require 'faker'
+
+FactoryGirl.define do
+  factory :contact do
+    firstname { Faker::Name.first_name }
+    lastname { Faker::Name.last_name }
+    email { Faker::Internet.email }
+  end
+end
+				</code></pre>
+
+					</section>
+					<section>
+						<h3>Advanced associations</h3>
+					<pre><code data-trim contenteditable>
+FactoryGirl.define do
+  factory :contact do
+    firstname { Faker::Name.first_name }
+    lastname { Faker::Name.last_name }
+    email { Faker::Internet.email }
+    after_build do |contact|
+      [:home_phone, :work_phone, :mobile_phone].each do |phone|
+        contact.phones << FactoryGirl.build(phone, contact: contact)
+      end
+    end
+  end
+end
+				</code></pre>
+        <small>example</small>
+					<pre><code data-trim contenteditable>
+it "has three phone numbers" do
+ create(:contact).phones.count.should eq 3
+end
+				</code></pre>
+
+					</section>
+
+				</section>
+				<!-- let before.. -->
+				<section>
+					<section>
+						<h3>before - after - let - subject</h3>
+					</section>
+
+					<section>
+            <h3>before and after hooks</h3>
+              <blockquote><small><p>As a developer using RSpec
+I want to execute arbitrary code before and after each example
+So that I can control the environment in which it is run
+        </p>
+        <p>
+          before(:each) blocks are run before each example before(:all) blocks are run once before all of the examples in a group
+        </p>
+        <p>
+          after(:each) blocks are run after each example after(:all) blocks are run once after all of the examples in a group
+        </p>
+        </small>
+        </blockquote>
+					</section>
+          <section>
+          <pre><code data-trim contenteditable>
+describe Thing do
+  before(:each) do
+    @thing = FactoryGirl.create(:thing)
+  end
+
+  describe "initialized in before(:each)" do
+    it "has 0 widgets" do
+      @thing.should have(0).widgets
+    end
+    it "can get accept new widgets" do
+      @thing.widgets << Object.new
+    end
+  end
+  after(:all) do
+    puts "after all ran"
+  end
+end
+        </code></pre>
+          </section>
+          <section>
+            <h3>Use let and let!</h3>
+              <blockquote><small><p>When you have to assign a variable instead of using a before block to create an instance variable, use let. Using let the variable lazy loads only when it is used the first time in the test and get cached until that specific test is finished. A really good and deep description of what let can be found in this <a href="http://stackoverflow.com/questions/5359558/when-to-use-rspec-let/5359979#5359979">stackoverflow answer</a>
+        </p>
+
+        </small>
+        </blockquote>
+          </section>
+       <section>
+          <pre><code data-trim contenteditable>
+describe '#type_id' do
+  let(:resource) { FactoryGirl.create :device }
+  let(:type)     { Type.find resource.type_id }
+
+  it 'sets the type_id field' do
+    expect(resource.type_id).to == type.id
+  end
+end
+        </code></pre>
+             <blockquote><small><p>Use let! if you want to define the variable when the block is defined. This can be useful to populate your database to test queries or scopes.
+        </p>
+
+        </small>
+        </blockquote>
+          </section>
+            <section>
+            <h3>Use subject</h3>
+              <blockquote><small><p>If you have several tests related to the same subject use subject{} to DRY them up.
+        </p>
+        </small>
+        </blockquote>
+          </section>
+       <section>
+          <pre><code data-trim contenteditable>
+subject { Hero.first }
+it "carries a sword" do
+  expect(subject.equipment).to include "sword"
+end
+.
+.
+.
+        </code></pre>
+          </section>
+				</section>
+        <!-- controller specs -->
+        <section>
+          <section>
+            
+          </section>
+        </section>
+				
+
+
+				<section>
+					<h1>THE END</h1>
+					<h3>By luis edymerchk laverde</h3>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
