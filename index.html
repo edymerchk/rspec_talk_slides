@@ -59,8 +59,22 @@
 						<li>flexible and customizable reporting</li>
 						<li>extensible expectation language (<a href="http://rubydoc.info/gems/rspec-expectations/frames">rspec-expectations</a>)</li>
 						<li>built-in mocking/stubbing framework (<a href="http://rubydoc.info/gems/rspec-mocks/frames">rspec-mocks</a>)</li>
-					</ul>	
+					</ul>
 				</section>
+        <section>
+          <img src="imgs/tdd_flow.gif">
+        </section>
+        <section>
+          <img src="imgs/with_without_tdd.jpg">
+        </section>
+        <section>
+          <img src="imgs/velocity.png">
+        </section>
+        <section>
+          <h3>With / Without tests</h3>
+          <img src="imgs/beach.jpg">
+          <img src="imgs/fuck.png">
+        </section>
 				</section>
 
 				<section>
@@ -177,7 +191,7 @@ end
 					<section>
 					<h2>Matchers</h2>
 					<img src="imgs/matchers2.png">
-					</section>	
+					</section>
 					<section>
 					<h2>Examples</h2>
 					<img src="imgs/matchers3.png">
@@ -263,7 +277,7 @@ $ vim spec/spec_helper.rb
 						<h3>Location location location!</h3>
 					<blockquote><small><p>The name and location for your spec file is important! <br> RSpec’s file structure
 mirrors that of the app directory, as do the files within it. In the case of model
-specs, contact_spec.rb should correspond to contact.rb. 
+specs, contact_spec.rb should correspond to contact.rb.
 				</p>
 				</small>
 				</blockquote>
@@ -285,7 +299,7 @@ end
 					</section>
 				<section>
 				<h3>Factories</h3>
-	<blockquote><small><p>factory_girl is a fixtures replacement with a straightforward definition syntax, support for multiple build strategies (saved instances, unsaved instances, attribute hashes, and stubbed objects), and support for multiple factories for the same class (user, admin_user, and so on), including factory inheritance. 
+	<blockquote><small><p>factory_girl is a fixtures replacement with a straightforward definition syntax, support for multiple build strategies (saved instances, unsaved instances, attribute hashes, and stubbed objects), and support for multiple factories for the same class (user, admin_user, and so on), including factory inheritance.
 				</p>
 				</small>
 				</blockquote>
@@ -457,14 +471,431 @@ end
         <!-- controller specs -->
         <section>
           <section>
-            
+            <h2>Controller specs</h2>
+          </section>
+          <section>
+          <blockquote><small><p>
+          </p>A controller spec is broken down by controller method–each example is based off of a single action and, optionally, any params passed to it.
+
+          </small>
+          </blockquote>
+          </section>
+          <section>
+<pre><code data-trim contenteditable>
+it "redirects to the home page upon save" do
+  post :create, message: FactoryGirl.attributes_for(:message)
+  expect(response).to redirect_to root_url
+end
+
+        </code></pre>
+          <blockquote><small><p>
+          </p>A factory generates test data to pass to the controller method; note the use of Factory Girl’s
+attributes_for option, which generates a hash of values as opposed to a Ruby object.
+
+          </small>
+          </blockquote>
+          </section>
+          <section>
+            <h3>Get requests</h3><small>index</small>
+<pre><code data-trim contenteditable>
+describe'GET#index'do
+  it "populates an array of messages" do
+    message = create(:message)
+    get :index
+    expect(assigns(:messages)).to match_array [message]
+  end
+  it "renders the :index view" do
+    get :index
+    expect(response).to render_template :index
+  end
+end
+
+        </code></pre>
+        </section>
+
+        <section>
+            <h3>Get requests</h3><small>show</small>
+<pre><code data-trim contenteditable>
+describe'GET#show'do
+  it "assigns the requested message to @message" do
+    message = create(:message)
+    get :show, id: message
+    expect(assigns(:message)).to eq message
+  end
+  it "renders the :show template" do
+    message = create(:message)
+    get :show, id: message
+    expect(response).to render_template :show
+  end
+end
+
+        </code></pre>
+        </section>
+        <section>
+            <h3>Get requests</h3><small>new</small>
+<pre><code data-trim contenteditable>
+describe'GET#new'do
+  it "assigns a new Message to @message" do
+    get :new
+    expect(assigns(:message)).to be_a_new(Message) end
+  it "renders the :new template" do get :new
+    expect(response).to render_template :new
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+            <h3>Get requests</h3><small>edit</small>
+<pre><code data-trim contenteditable>
+describe'GET#edit'do
+  it "assigns the requested message to @message" do
+    message = create(:message)
+    get :edit, id: message
+    expect(assigns(:message)).to eq message
+  end
+  it "renders the :edit template" do
+    message = create(:message)
+    get :edit, id: message expect(response).to render_template :edit
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+            <h3>Post requests</h3>
+<pre><code data-trim contenteditable>
+it "does something upon post#create" do
+  post :create, message: attributes_for(:message)
+end
+        </code></pre>
+          <blockquote><small><p>
+          </p>One key difference from the GET methods: Instead of the :id we passed to the GET methods, we need to pass the equivalent of params[:message]
+
+          </small>
+          </blockquote>
+        </section>
+        <section>
+            <h3>Post requests</h3><small>create</small>
+<pre><code data-trim contenteditable>
+describe"POST#create"do
+  context "with valid attributes" do
+    it "saves the new message in the database" do expect{
+      post :create, message: attributes_for(:message)
+      }.to change(Message, :count).by(1)
+    end
+    it "redirects to the home page" do
+      post :create, message: attributes_for(:message)
+      expect(response).to redirect_to root_url
+    end
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+            <h3>Post requests</h3><small>create</small>
+<pre><code data-trim contenteditable>
+describe"POST#create"do
+context "with invalid attributes" do
+  it "does not save the new message in the database" do
+    expect{
+      post :create,
+      message: attributes_for(:invalid_message)
+      }.to_not change(Message, :count)
+    end
+    it "re-renders the :new template" do post :create,
+      message: attributes_for(:invalid_message)
+      expect(response).to render_template :new
+    end
+  end
+end
+        </code></pre>
+          <blockquote><small><p>:invalid_message ?? WTF ?
+          </p>
+
+          </small>
+          </blockquote>
+        </section>
+        <section>
+            <h3>factory inheritance</h3>
+<pre><code data-trim contenteditable>
+FactoryGirl.define do
+  factory :message do
+    name { Faker::Name.name }
+    email { Faker::Internet.email }
+    message { Faker::Lorem.paragraph }
+
+    factory :invalid_message do
+      email nil
+    end
+
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+        <h3>put requests</h3><small>update</small>
+<pre><code data-trim contenteditable>
+describe'PUT#update'do
+  let(:message) {create(:message, firstname: "Byron Builes", email: "Byron@builes.com")}
+  context "valid attributes" do
+    it "changes message's attributes" do
+      put :update, id: message,
+      message: attributes_for(:message, firstname: "B. Builes")
+      message.reload
+      expect(message.name).to eq("B. Builes") end
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+            <h3>delete requests</h3><small>destroy</small>
+<pre><code data-trim contenteditable>
+describe'DELETE#destroy'do
+  before :each do
+    @message = create(:message)
+  end
+  it "deletes the message" do
+    expect{
+        delete :destroy, id: @message
+      }.to change(Message,:count).by(-1)
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+      <h3>non-CRUD methods</h3>
+<pre><code data-trim contenteditable>
+describe'POST#flag'do
+
+  let(:message) {create(:message) }
+
+  it "marks the message as inappropriate" do
+    put :flag, id: message
+    expect(message.reload.is_inappropriate?).to be_true
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+      <h3>routes specs</h3>
+
+<pre><code data-trim contenteditable>
+it "routes to #index" do
+  get("/articles").should route_to("articles#index")
+end
+
+it "routes to #show" do
+  get("/books/1").should route_to("books#show", :id => "1")
+end
+        </code></pre>
+        </section>
+
+        <section>
+      <h3>non-HTML controller output</h3>
+
+<pre><code data-trim contenteditable>
+def index
+
+  @messages = Message.all
+
+  respond_to do |format|
+    format.html # index.html.erb
+    format.csv do
+      send_data Message.to_csv(@messages),
+        type: 'text/csv; charset=iso-8859-1; header=present',
+        :disposition => 'attachment; filename=messages.csv'
+    end
+  end
+end
+        </code></pre>
+        </section>
+        <section>
+<pre><code data-trim contenteditable>
+describe'CSVoutput'do
+  it "returns a CSV file" do
+   get :index, format: :csv
+    expect(response.headers['Content-Type']).to have_content 'text/csv'
+  end
+  it 'returns content' do
+    create(:message,
+        name: 'Aaron',
+        email: 'aaron@sample.com',
+        message: 'Testing!')
+    get :index, format: :csv
+    expect(response.body).to have_content 'Aaron,aaron@sample.com,Testing!'
+  end
+end
+        </code></pre>
+          <blockquote><small><p>The have_content matcher shown here comes from Capybara
+          </p>
+
+          </small>
+          </blockquote>
+        </section>
+        <section>
+<pre><code data-trim contenteditable>
+it "returns JSON-formattedcontent"do
+  message = create(:message)
+  get :index, format: :json
+  expect(response.body).to have_content message.to_json
+end
+        </code></pre>
+          <blockquote><small><p>The have_content matcher shown here comes from Capybara
+          </p>
+
+          </small>
+          </blockquote>
+        </section>
+        </section>
+        <!-- end controllers -->
+        <section>
+          <!-- more items -->
+          <section>
+            <h3>more?</h3>
+
+          </section>
+          <section>
+            <h3>pending</h3>
+<pre><code data-trim contenteditable>
+describe "an example" do
+  it "is a pending example"
+
+  it "returns the baloto's winner combination" do
+    pending
+  end
+end
+        </code></pre>
+          </section>
+          <section>
+            <h3>tags</h3>
+<pre><code data-trim contenteditable>
+describe "group with tagged specs" do
+  it "example I'm working now", :focus => true do; end
+  it "special example with string", :type => 'special' do; end
+  it "special example with symbol", :type => :special do; end
+  it "slow example", :skip => true do; end
+  it "ordinary example", :speed => 'slow' do; end
+  it "untagged example" do; end
+end
+
+rspec . --tag focus
+rspec . --tag type:special
+rspec . --tag ~speed:slow
+rspec . --tag ~skip --tag ~speed:slow
+
+        </code></pre>
+          </section>
+          <section>
+            <h3>devise</h3>
+            <p>Put the following inside a file named spec/support/devise.rb:</p>
+            <pre><code data-trim contenteditable>
+RSpec.configure do |config|
+  config.include Devise::TestHelpers, :type => :controller
+end
+
+sign_in @user          # sign_in(resource)
+
+sign_out @user         # sign_out(resource)
+        </code></pre>
+        <a href="https://github.com/plataformatec/devise/wiki/How-To:-Controllers-tests-with-Rails-3-(and-rspec)">Test Devise controllers with RSpec </a>
+          </section>
+          <section>
+            <h3>cancan</h3>
+            <p>If you are testing the Ability class through RSpec there is a be_able_to matcher available. This checks if the can? method returns true</p>
+            <pre><code data-trim contenteditable>
+require "cancan/matchers"
+# ...
+ability.should be_able_to(:destroy, Project.new(:user => user))
+ability.should_not be_able_to(:destroy, Project.new)
+        </code></pre>
+        <p>Pro way</p>
+<pre><code data-trim contenteditable>
+require "cancan/matchers"
+# ...
+describe "User" do
+  describe "abilities" do
+    subject(:ability){ Ability.new(user) }
+    let(:user){ nil }
+
+    context "when is an account manager" do
+      let(:user){ Factory(:accounts_manager) }
+      it{ should be_able_to(:manage, Account.new) }
+    end
+  end
+end
+        </code></pre>
+
+          </section>
+          <section>
+            <h3>custom matchers</h3>
+            <pre><code data-trim contenteditable>
+RSpec::Matchers.define :be_a_multiple_of do |expected|
+  match do |actual|
+    actual % expected == 0
+  end
+end
+
+9.should be_a_multiple_of(3)
+        </code></pre>
+
+          </section>
+          <section>
+            <h3>custom formatters</h3>
+            <ul>
+              <li><a href="https://github.com/rspec/rspec-core/tree/master/lib/rspec/core/formatters">Core formatters</a></li>
+              <li><a href="https://github.com/jeffkreeftmeijer/fuubar">Fuubar</a></li>
+              <li><a href="https://github.com/mattsears/nyan-cat-formatter">Nyan Cat </a></li>
+            </ul>
+          </section>
+          <section>
+            <h3>Email spec</h3>
+            <p>A collection of matchers for RSpec/MiniTest and Cucumber steps to make testing emails go smoothly.</p>
+            <br>
+            <p>This library works with ActionMailer and Pony. When using it with ActionMailer it works with DelayedJob, ActiveRecord Mailer, and action_mailer_cache_delivery.</p>
+            <a href="https://github.com/bmabey/email-spec">email-spec</a>
+          </section>
+          <section>
+            <h3>Database Cleaner</h3>
+            <p>Database Cleaner is a set of strategies for cleaning your database in Ruby.</p>
+            <a href="https://github.com/bmabey/database_cleaner">database_cleaner</a>
+          </section>
+          <section>
+            <h3>Guard</h3>
+            <p>Guard is a command line tool to easily handle events on file system modifications.</p>
+            <a href="https://github.com/guard/guard-rspec">guard-rspec</a>
+            <p>RSpec guard allows to automatically & intelligently launch specs when files are modified.</p>
+          </section>
+          <section>
+            <h3>VCR</h3>
+            <p>Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.</p>
+            <a href="https://github.com/vcr/vcr">VCR</a>
+          </section>
+          <section>
+            <h3>Spork</h3>
+            <p>Spork improves the loading time of your test suite by starting up your Rails application once in the background. Use it with Guard for the ultimate combo in fast feedback while doing TDD.</p>
+            <a href="https://github.com/sporkrb/spork">spork</a>
+            <a href="https://github.com/guard/guard-spork">guard-spork</a>
+
           </section>
         </section>
-				
 
+        <section>
+          <h3>next?</h3>
+          <ul>
+            <li>Mock and Stub</li>
+            <li>Guard-spork</li>
+            <li>behave_like ..</li>
+            <li>best practices rspec</li>
+            <li>Features with rspec (BDD)</li>
+            <li>Best practices rspec</li>
+            <li>Macros</li>
+            <li>Mock Frameworks</li>
+            <li>Helper Specs</li>
+          </ul>
+        </section>
 
 				<section>
 					<h1>THE END</h1>
+          <h3>Thx!</h3>
 					<h3>By luis edymerchk laverde</h3>
 				</section>
 
